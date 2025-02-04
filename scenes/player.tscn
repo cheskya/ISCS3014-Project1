@@ -171,10 +171,11 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_tivxp"]
-radius = 5.0
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gu3cb"]
+size = Vector2(32, 32)
 
 [node name="Player" type="CharacterBody2D"]
+collision_mask = 2
 script = ExtResource("1_xws4x")
 speed = 3
 
@@ -185,8 +186,8 @@ animation = &"moving_up"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -6)
-shape = SubResource("CircleShape2D_tivxp")
+position = Vector2(0, -12)
+shape = SubResource("RectangleShape2D_gu3cb")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(0, -6)
