@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c5ua4xbcvhjml"
-path="res://.godot/imported/fruit.png-3735163b668af10c2b35b52cba81b68a.ctex"
+uid="uid://bfak0u8iyachx"
+path="res://.godot/imported/whirlpool.png-068ed447363ac8ab5a9245d61a536835.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/fruit.png"
-dest_files=["res://.godot/imported/fruit.png-3735163b668af10c2b35b52cba81b68a.ctex"]
+source_file="res://assets/sprites/whirlpool.png"
+dest_files=["res://.godot/imported/whirlpool.png-068ed447363ac8ab5a9245d61a536835.ctex"]
 
 [params]
 

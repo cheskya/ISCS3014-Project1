@@ -13,9 +13,22 @@ func _physics_process(delta):
 	for dir in inputs.keys():
 		if Input.is_action_pressed(dir):
 			move(dir)
+	
+	if moving:
+		$AnimatedSprite2D.play()
+	else:
+		$AnimatedSprite2D.stop()
 
 func move(dir):
 	if !moving:
+		if inputs[dir].x < 0:
+			$AnimatedSprite2D.animation = "moving_left"
+		elif inputs[dir].x > 0:
+			$AnimatedSprite2D.animation = "moving_right"
+		elif inputs[dir].y < 0:
+			$AnimatedSprite2D.animation = "moving_up"
+		elif inputs[dir].y > 0:
+			$AnimatedSprite2D.animation = "moving_down"
 		var tween = get_tree().create_tween()
 		tween.tween_property(self, "position", (position + inputs[dir] * tile_size), 1.0/speed).set_trans(Tween.TRANS_SINE)
 		moving = true
