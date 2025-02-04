@@ -1,21 +1,23 @@
 extends CharacterBody2D
 
-var tile_size = 32
-var inputs = {
-	"ui_right": Vector2.RIGHT,
-	"ui_left": Vector2.LEFT,
-	"ui_up": Vector2.UP,
-	"ui_down": Vector2.DOWN
-}
+@export var tile_size = 32
+@export var speed = 5
+var moving = false
 
-func _ready():
-	position = position.snapped(Vector2.ONE * tile_size)
-	position += Vector2.ONE * tile_size/2
+var inputs = {"move_right": Vector2.RIGHT,
+			"move_left": Vector2.LEFT,
+			"move_up": Vector2.UP,
+			"move_down": Vector2.DOWN}
 
-func _unhandled_input(event):
+func _physics_process(delta):
 	for dir in inputs.keys():
-		if event.is_action_pressed(dir):
+		if Input.is_action_pressed(dir):
 			move(dir)
 
 func move(dir):
-	position += inputs[dir] * tile_size
+	if !moving:
+		var tween = get_tree().create_tween()
+		tween.tween_property(self, "position", (position + inputs[dir] * tile_size), 1.0/speed).set_trans(Tween.TRANS_SINE)
+		moving = true
+		await tween.finished
+		moving = false

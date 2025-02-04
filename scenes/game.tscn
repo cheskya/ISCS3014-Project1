@@ -1,7 +1,40 @@
-[gd_scene load_steps=2 format=3 uid="uid://srngnj1rkj7p"]
+[gd_scene load_steps=7 format=4 uid="uid://srngnj1rkj7p"]
 
+[ext_resource type="Texture2D" uid="uid://cy0qgytsc8mri" path="res://assets/sprites/water.png" id="1_fn3vq"]
 [ext_resource type="PackedScene" uid="uid://4rvlqf48fttq" path="res://scenes/player.tscn" id="1_iflbp"]
+[ext_resource type="Texture2D" uid="uid://dxpp4lpgksor5" path="res://assets/sprites/sand.png" id="2_d58y0"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lylvn"]
+texture = ExtResource("1_fn3vq")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+1:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_h2pld"]
+texture = ExtResource("2_d58y0")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_nt3vw"]
+tile_size = Vector2i(32, 32)
+sources/0 = SubResource("TileSetAtlasSource_lylvn")
+sources/1 = SubResource("TileSetAtlasSource_h2pld")
 
 [node name="Game" type="Node2D"]
 
+[node name="Map" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAD/////AAAAAAAAAAABAP//AAAAAAAAAAD9////AAAAAAAAAAD//wEAAAAAAAAAAAD9/wEAAAAAAAAAAAABAAEAAAAAAAAAAAD///3/AAAAAAAAAAD9//3/AAAAAAAAAAABAP3/AAAAAAAAAAA=")
+tile_set = SubResource("TileSet_nt3vw")
+
 [node name="Player" parent="." instance=ExtResource("1_iflbp")]
+position = Vector2(-15, -8)
