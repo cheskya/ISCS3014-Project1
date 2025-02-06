@@ -6,6 +6,7 @@ extends CharacterBody2D
 @export var tile_size = 32
 @export var speed = 5
 var moving = false
+var forced = false
 
 var inputs = {"move_right": Vector2.RIGHT,
 			"move_left": Vector2.LEFT,
@@ -19,6 +20,8 @@ func _physics_process(delta):
 	var tile_id = get_tile_id(position)
 	print("Tile ID at current position:", tile_id)
 
+	forced = false
+
 	if tile_id == 3:  
 		var forced_dir = get_wave_tile_direction(position)
 		if forced_dir != Vector2.ZERO:
@@ -29,7 +32,7 @@ func _physics_process(delta):
 		teleport(whirl_pos)
 
 	for dir in inputs.keys():
-		if Input.is_action_pressed(dir):
+		if Input.is_action_pressed(dir) and forced == false:
 			move(dir)
 	
 	if moving:
@@ -79,6 +82,7 @@ func move(dir):
 			
 func move_forced(direction: Vector2):
 	if !moving:
+		forced = true
 		if direction.x < 0:
 			$AnimatedSprite2D.animation = "moving_left"
 		elif direction.x > 0:
