@@ -13,6 +13,9 @@ var inputs = {"move_right": Vector2.RIGHT,
 			"move_up": Vector2.UP,
 			"move_down": Vector2.DOWN}
 
+func _ready():
+	$AnimatedSprite2D.play()
+
 func _physics_process(delta):
 	if moving:
 		return
@@ -35,10 +38,8 @@ func _physics_process(delta):
 		if Input.is_action_pressed(dir) and forced == false:
 			move(dir)
 	
-	if moving:
-		$AnimatedSprite2D.play()
-	else:
-		$AnimatedSprite2D.stop()
+	if !moving and !forced:
+		$AnimatedSprite2D.animation = "idle"
 
 	
 func get_tile_id(pos: Vector2) -> int:
