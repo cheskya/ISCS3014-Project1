@@ -1,3 +1,14 @@
+# I hereby attest to the truth of the following facts:
+#
+# I have not discussed the C++ code in my program with anyone
+# other than my instructor or the teaching assistants assigned to this course.
+# 
+# I have not used C++ code obtained from another student, or
+# any other unauthorized source, whether modified or unmodified.
+#
+# If any C++ code or documentation used in my program was
+# obtained from another source, it has been clearly noted with citations in the
+# comments of my program.
 
 extends CharacterBody2D
 
@@ -20,11 +31,11 @@ func _ready():
 func _physics_process(delta):
 	if moving:
 		return
-
+	
 	var tile_id = get_tile_id(position)
-
+	
 	forced = false
-
+	
 	if tile_id == 3:  
 		var forced_dir = get_wave_tile_direction(position)
 		if forced_dir != Vector2.ZERO:
@@ -33,7 +44,7 @@ func _physics_process(delta):
 	if tile_id == 4:
 		var whirl_pos = position
 		teleport(whirl_pos)
-
+	
 	for dir in inputs.keys():
 		if Input.is_action_pressed(dir) and forced == false:
 			move(dir)
@@ -41,7 +52,7 @@ func _physics_process(delta):
 	
 	if !moving and !forced:
 		$AnimatedSprite2D.animation = "idle"
-	
+
 func get_tile_id(pos: Vector2) -> int:
 	if tilemap == null:
 		print("Error: TileMap is null!")
@@ -80,7 +91,7 @@ func move(dir):
 			moving = true
 			await tween.finished
 			moving = false
-			
+
 func move_forced(direction: Vector2):
 	if !moving:
 		forced = true
@@ -93,7 +104,7 @@ func move_forced(direction: Vector2):
 		elif direction.y > 0:
 			$AnimatedSprite2D.animation = "moving_down"
 	await move_to(direction)
-	
+
 func teleport(whirl_pos: Vector2):
 	if !just_teleported:
 		var whirl1: Vector2 = Vector2(240, -164)
@@ -104,7 +115,7 @@ func teleport(whirl_pos: Vector2):
 		else:
 			target_position = whirl1 
 		await teleport_to(target_position, whirl_pos)
-	
+
 func move_to(direction: Vector2):
 	ray.target_position = direction * tile_size
 	ray.force_raycast_update()
