@@ -1,6 +1,8 @@
+
 extends CharacterBody2D
 
 @onready var ray = $RayCast2D
+@onready var tilemap: TileMapLayer = get_parent().get_node("Map")
 @export var tile_size = 32
 @export var speed = 5
 var moving = false
@@ -11,6 +13,18 @@ var inputs = {"move_right": Vector2.RIGHT,
 			"move_down": Vector2.DOWN}
 
 func _physics_process(delta):
+	if moving:
+		return  # Prevent new inputs while moving
+
+	var tile_id = get_tile_id(position)
+	print("Tile ID at current position:", tile_id)
+
+	# Check for forced movement (wave tiles)
+	if tile_id == 3:  
+		var forced_dir = get_wave_tile_direction(position)
+		if forced_dir != Vector2.ZERO:
+			await move_forced(forced_dir)
+
 	for dir in inputs.keys():
 		if Input.is_action_pressed(dir):
 			move(dir)
@@ -19,6 +33,28 @@ func _physics_process(delta):
 		$AnimatedSprite2D.play()
 	else:
 		$AnimatedSprite2D.stop()
+
+	
+func get_tile_id(pos: Vector2) -> int:
+	if tilemap == null:
+		print("Error: TileMap is null!")  # Debugging step
+		return -1  # Return an invalid tile ID
+	var tile_pos = tilemap.local_to_map(pos)  # Convert world position to tile position
+	return tilemap.get_cell_source_id(tile_pos)  # Get the tile ID
+
+func get_wave_tile_direction(pos: Vector2) -> Vector2:
+	if tilemap == null:
+		return Vector2.ZERO
+	var tile_pos = tilemap.local_to_map(pos)
+	var tile_data = tilemap.get_cell_tile_data(tile_pos)
+	
+	if tile_data:
+		var direction = tile_data.get_custom_data("direction")
+		if direction is Vector2:  # Ensure it's a valid Vector2
+			return direction
+	
+	return Vector2.ZERO
+
 
 func move(dir):
 	if !moving:
@@ -38,3 +74,15 @@ func move(dir):
 			moving = true
 			await tween.finished
 			moving = false
+			
+func move_forced(direction: Vector2):
+	if moving:
+		return
+	await move_to(position + direction * tile_size)
+	
+func move_to(target_pos: Vector2):
+	var tween = get_tree().create_tween()
+	tween.tween_property(self, "position", target_pos, 1.0 / speed).set_trans(Tween.TRANS_SINE)
+	moving = true
+	await tween.finished
+	moving = false
