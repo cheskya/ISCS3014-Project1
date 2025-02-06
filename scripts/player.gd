@@ -14,16 +14,19 @@ var inputs = {"move_right": Vector2.RIGHT,
 
 func _physics_process(delta):
 	if moving:
-		return  # Prevent new inputs while moving
+		return
 
 	var tile_id = get_tile_id(position)
 	print("Tile ID at current position:", tile_id)
 
-	# Check for forced movement (wave tiles)
 	if tile_id == 3:  
 		var forced_dir = get_wave_tile_direction(position)
 		if forced_dir != Vector2.ZERO:
 			await move_forced(forced_dir)
+	
+	if tile_id == 4:
+		var whirl_pos = position
+		teleport(whirl_pos)
 
 	for dir in inputs.keys():
 		if Input.is_action_pressed(dir):
@@ -37,10 +40,10 @@ func _physics_process(delta):
 	
 func get_tile_id(pos: Vector2) -> int:
 	if tilemap == null:
-		print("Error: TileMap is null!")  # Debugging step
-		return -1  # Return an invalid tile ID
-	var tile_pos = tilemap.local_to_map(pos)  # Convert world position to tile position
-	return tilemap.get_cell_source_id(tile_pos)  # Get the tile ID
+		print("Error: TileMap is null!") 
+		return -1  
+	var tile_pos = tilemap.local_to_map(pos)  
+	return tilemap.get_cell_source_id(tile_pos) 
 
 func get_wave_tile_direction(pos: Vector2) -> Vector2:
 	if tilemap == null:
@@ -54,7 +57,6 @@ func get_wave_tile_direction(pos: Vector2) -> Vector2:
 			return direction
 	
 	return Vector2.ZERO
-
 
 func move(dir):
 	if !moving:
@@ -76,9 +78,26 @@ func move(dir):
 			moving = false
 			
 func move_forced(direction: Vector2):
-	if moving:
-		return
+	if !moving:
+		if direction.x < 0:
+			$AnimatedSprite2D.animation = "moving_left"
+		elif direction.x > 0:
+			$AnimatedSprite2D.animation = "moving_right"
+		elif direction.y < 0:
+			$AnimatedSprite2D.animation = "moving_up"
+		elif direction.y > 0:
+			$AnimatedSprite2D.animation = "moving_down"
 	await move_to(position + direction * tile_size)
+	
+func teleport(whirl_pos: Vector2):
+	var whirl1: Vector2 = Vector2(240, -164)
+	var whirl2: Vector2 = Vector2(-240, 156)
+	var target_position = null
+	if whirl_pos == whirl1:
+		target_position = whirl2
+	else:
+		target_position = whirl1 
+	await move_to(target_position)
 	
 func move_to(target_pos: Vector2):
 	var tween = get_tree().create_tween()
