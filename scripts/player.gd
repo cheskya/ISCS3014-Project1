@@ -1,4 +1,3 @@
-
 extends CharacterBody2D
 
 @onready var ray = $RayCast2D
@@ -18,8 +17,6 @@ func _physics_process(delta):
 		return
 
 	var tile_id = get_tile_id(position)
-	print("Tile ID at current position:", tile_id)
-
 	forced = false
 
 	if tile_id == 3:  
@@ -40,7 +37,6 @@ func _physics_process(delta):
 	else:
 		$AnimatedSprite2D.stop()
 
-	
 func get_tile_id(pos: Vector2) -> int:
 	if tilemap == null:
 		print("Error: TileMap is null!") 
@@ -56,7 +52,7 @@ func get_wave_tile_direction(pos: Vector2) -> Vector2:
 	
 	if tile_data:
 		var direction = tile_data.get_custom_data("direction")
-		if direction is Vector2:  # Ensure it's a valid Vector2
+		if direction is Vector2:
 			return direction
 	
 	return Vector2.ZERO
@@ -79,7 +75,7 @@ func move(dir):
 			moving = true
 			await tween.finished
 			moving = false
-			
+
 func move_forced(direction: Vector2):
 	if !moving:
 		forced = true
@@ -100,8 +96,11 @@ func teleport(whirl_pos: Vector2):
 	if whirl_pos == whirl1:
 		target_position = whirl2
 	else:
-		target_position = whirl1 
-	await move_to(target_position)
+		target_position = whirl1
+	for dir in inputs.keys():
+		if Input.is_action_pressed(dir):
+			await move_to(target_position)
+			move(dir)
 	
 func move_to(target_pos: Vector2):
 	var tween = get_tree().create_tween()
